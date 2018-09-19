@@ -2,7 +2,7 @@
 *		Christopher Rudel & Sean Hill
 *		Client.java
 */
-ackage Assignment2;
+package Assignment2;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -24,11 +24,13 @@ public class Client
 	 	routine.add(e); 
 	}
 
-	public static Client generateRandom(int id, Map<WeightPlateSize, Integer> noOfWeightPlates)
+	public Client generateRandom(int id, Map<WeightPlateSize, Integer> noOfWeightPlates)
 	{
-		Client ret = new Client(id);
-		//what do we do with the second parameter
-		return ret;
+		//TODO: generate random exercise
+		Exercise e = new Exercise(ApparatusType.BARBELL, null, 0); //placeholder
+		this.addExercise(e);
+		//why doesnt the first argument provide errors
+		return this;
 
 	}
 }

@@ -2,7 +2,7 @@
 *		Christopher Rudel & Sean Hill
 *		Exercise.java
 */
-ackage Assignment2;
+package Assignment2;
 
 import java.util.Map;
 import java.util.HashMap;

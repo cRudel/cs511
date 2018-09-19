@@ -2,7 +2,7 @@
 *		Christopher Rudel & Sean Hill
 *		WeightPlateSize.java
 */
-ackage Assignment2;
+package Assignment2;
 
 import java.util.Random;
 	public enum WeightPlateSize
