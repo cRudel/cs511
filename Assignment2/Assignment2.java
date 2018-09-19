@@ -1,4 +1,9 @@
-package Assignment2;
+/*
+*		Christopher Rudel & Sean Hill
+*		Assignment2.java
+*		(This code was given to us)
+*/
+ackage Assignment2;
 
 public class Assignment2
 {

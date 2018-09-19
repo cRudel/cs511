@@ -1,3 +1,8 @@
+/*
+*		Christopher Rudel & Sean Hill
+*		ApparatusType.java
+*/
+
 package Assignment2;
 import java.util.Random;
 

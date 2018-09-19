@@ -1,4 +1,8 @@
-package Assignment2;
+/*
+*		Christopher Rudel & Sean Hill
+*		Client.java
+*/
+ackage Assignment2;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;

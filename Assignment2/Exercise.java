@@ -1,4 +1,8 @@
-package Assignment2;
+/*
+*		Christopher Rudel & Sean Hill
+*		Exercise.java
+*/
+ackage Assignment2;
 
 import java.util.Map;
 import java.util.HashMap;

@@ -1,4 +1,8 @@
-package Assignment2;
+/*
+*		Christopher Rudel & Sean Hill
+*		Gym.java
+*/
+ackage Assignment2;
 import Assignment2.WeightPlateSize;
 import java.util.Map;
 import java.util.HashMap;
