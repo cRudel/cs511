@@ -16,7 +16,7 @@ public enum ApparatusType
 
 	public static ApparatusType rndApparatus()
 	{
-		int n = rnd.nextInt(8) + 1;
+		int n = rnd.nextInt((8-1) + 1) + 1;
 
 		//this part is not pretty excuse this 
 

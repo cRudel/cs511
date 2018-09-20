@@ -24,7 +24,7 @@ public class Exercise
 
 	public static Exercise generateRandom(Map<WeightPlateSize, Integer> weight)
 	{
-		Exercise ex = new Exercise(ApparatusType.rndApparatus(), weight, rnd.nextInt(10)+1); //the duration is in milliseconds
+		Exercise ex = new Exercise(ApparatusType.rndApparatus(), weight, rnd.nextInt((10-1) + 1) + 1); //the duration is in milliseconds
 		return ex;
 	}
 

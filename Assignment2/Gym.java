@@ -26,7 +26,7 @@ public class Gym implements Runnable
 	//semaphores for legpress, barbell, hacksquat, legextension, legcurl, latpulldown, pecdeck, & cablecrossover
 
 	private Random rnd = new Random();
-
+	//the random number generator in java will be: rnd.nextInt((max-min) + 1) + min; . I don't know why its so complex
 
 	public void run()
 	{
@@ -39,14 +39,14 @@ public class Gym implements Runnable
 
 		for(int i=0; i<GYM_REGISTERED_CLIENTS; i++)
 		{
-			noOfWeightPlates.clear();
-			noOfWeightPlates.put(WeightPlateSize.SMALL_3KG, rnd.nextInt(10));
-			noOfWeightPlates.put(WeightPlateSize.MEDIUM_5KG, rnd.nextInt(10));
-			noOfWeightPlates.put(WeightPlateSize.LARGE_10KG, rnd.nextInt(10));
-			//according to pdf number of plates for each exercise should between 0 and 10, aka rnd.nextInt(10) + 0 
-			for(int j=0; j<rnd.nextInt(20) + 15; j++)
+	   	  noOfWeightPlates.clear();
+  		  noOfWeightPlates.put(WeightPlateSize.SMALL_3KG, rnd.nextInt((10-0) + 1));
+    	  noOfWeightPlates.put(WeightPlateSize.MEDIUM_5KG, rnd.nextInt((10-0) + 1));
+    	  noOfWeightPlates.put(WeightPlateSize.LARGE_10KG, rnd.nextInt((10-0) + 1));
+			//according to pdf number of plates for each exercise should between 0 and 10
+			for(int j=0; j<rnd.nextInt((20-15) + 1) + 15; j++) 
 				people[i].addExercise(Exercise.generateRandom(noOfWeightPlates));
-
+			//routines should have 15-20 exercises
 		}
 		
 

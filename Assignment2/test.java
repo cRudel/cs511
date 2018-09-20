@@ -13,26 +13,30 @@ public class test implements Runnable{
 	public test(){}
 	public static void main(String[] args)
 	{
-			Client c[] = new Client[4];
-			for(int i=0; i<4; i++)
+			Client c[] = new Client[5];
+			for(int i=0; i<5; i++)
 				c[i] = new Client(i);
-			for(int i=0; i<4; i++)
+	for(int i=0; i<5; i++)
     {
-      noOfWeightPlates.clear();
-      noOfWeightPlates.put(WeightPlateSize.SMALL_3KG, rnd.nextInt(10));
-      noOfWeightPlates.put(WeightPlateSize.MEDIUM_5KG, rnd.nextInt(10));
-      noOfWeightPlates.put(WeightPlateSize.LARGE_10KG, rnd.nextInt(10));
-      //according to pdf number of plates for each exercise should between 0 and 10, aka rnd.nextInt(10) + 0
-      for(int j=0; j<rnd.nextInt(20) + 15; j++)
+
+      //according to pdf number of plates for each exercise should between 0 and 10
+      for(int j=0; j<rnd.nextInt((20-15) + 1) + 15; j++)
+      {
+      	      noOfWeightPlates.clear();
+      noOfWeightPlates.put(WeightPlateSize.SMALL_3KG, rnd.nextInt((10-0) + 1));
+      noOfWeightPlates.put(WeightPlateSize.MEDIUM_5KG, rnd.nextInt((10-0) + 1));
+      noOfWeightPlates.put(WeightPlateSize.LARGE_10KG, rnd.nextInt((10-0) + 1));
         c[i].addExercise(Exercise.generateRandom(noOfWeightPlates));
+    	//"Clientsshould be assigned unique ids and should have between 15 and 20 exercises intheir routines."
+      }
     }
 
 
-		for(int i=0; i<4; i++)
+		for(int i=0; i<5; i++)
 		{
-			for(int j=0; i<c[i].getRoutine().size()-1; j++)
+			System.out.println("Person ID: " +  i + " has routine length: " + c[i].getRoutine().size());
+			for(int j=0; j<c[i].getRoutine().size(); j++)
 			{
-				System.out.println(c[i].getRoutine().size());
 				c[i].getRoutine().get(j).printExercise();
 			}
 
