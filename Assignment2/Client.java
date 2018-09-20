@@ -26,11 +26,15 @@ public class Client
 
 	public Client generateRandom(int id, Map<WeightPlateSize, Integer> noOfWeightPlates)
 	{
-		//TODO: generate random exercise
-		Exercise e = new Exercise(ApparatusType.BARBELL, null, 0); //placeholder
+		Exercise e = Exercise.generateRandom(noOfWeightPlates);
 		this.addExercise(e);
 		//why doesnt the first argument provide errors
 		return this;
 
+	}
+
+	List<Exercise> getRoutine()
+	{
+		return this.routine;
 	}
 }

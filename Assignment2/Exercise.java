@@ -25,8 +25,6 @@ public class Exercise
 	public static Exercise generateRandom(Map<WeightPlateSize, Integer> weight)
 	{
 		Exercise ex = new Exercise(ApparatusType.rndApparatus(), weight, rnd.nextInt(10)+1); //the duration is in milliseconds
-		//The pdf also did not specify how long the exercise should be 
-
 		return ex;
 	}
 
