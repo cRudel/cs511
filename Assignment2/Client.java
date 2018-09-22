@@ -7,11 +7,16 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Random;
 
 public class Client
 {
 	private int id;
 	private List<Exercise> routine;
+	private static Map<WeightPlateSize, Integer> noOfWeightPlates = new LinkedHashMap<>();	
+	private static Random rnd = new Random();
+
 
 	public Client(int id)
 	{
@@ -24,12 +29,22 @@ public class Client
 	 	routine.add(e); 
 	}
 
-	public Client generateRandom(int id, Map<WeightPlateSize, Integer> noOfWeightPlates)
+	public static Client generateRandom(int id)
 	{
-		Exercise e = Exercise.generateRandom(noOfWeightPlates);
-		this.addExercise(e);
-		//why doesnt the first argument provide errors
-		return this;
+		Client c = new Client(id);
+		for(int j=0; j<rnd.nextInt((20-15) + 1) + 15; j++)
+      {
+        //noOfWeightPlates.clear();
+    //    noOfWeightPlates.put(WeightPlateSize.SMALL_3KG, rnd.nextInt((10-0) + 1));
+     //   noOfWeightPlates.put(WeightPlateSize.MEDIUM_5KG, rnd.nextInt((10-0) + 1));
+      //  noOfWeightPlates.put(WeightPlateSize.LARGE_10KG, rnd.nextInt((10-0) + 1));
+		//		System.out.println(noOfWeightPlates.get(WeightPlateSize.SMALL_3KG));
+				Exercise e = Exercise.generateRandom();
+				c.addExercise(e);
+
+      }
+
+		return c;
 
 	}
 

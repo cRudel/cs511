@@ -29,9 +29,9 @@ public class Gym implements Runnable
 	private Semaphore[] apparatuses = new Semaphore[] {new Semaphore(5),new Semaphore(5),new Semaphore(5),new Semaphore(5),new Semaphore(5),new Semaphore(5),new Semaphore(5),new Semaphore(5)};
 	//semaphores for legpress, barbell, hacksquat, legextension, legcurl, latpulldown, pecdeck, & cablecrossover
 
-	private Map<WeightPlateSize, Integer> numberOfWeights; //remaining weights
-	private Map<WeightPlateSize, Semaphore> weight_perms;
-	private Map<ApparatusType, Semaphore> app_perms;
+	private Map<WeightPlateSize, Integer> numberOfWeights = new HashMap<>(); //remaining weights
+	private Map<WeightPlateSize, Semaphore> weight_perms = new HashMap<>();;
+	private Map<ApparatusType, Semaphore> app_perms = new HashMap<>();
 	int numSmallWeights;
 	int numMedWeights;
 	int numLargeWeights;
@@ -74,20 +74,9 @@ public class Gym implements Runnable
 		for(int i=0; i<GYM_REGISTERED_CLIENTS; i++)
 		{
 			clients.add(new Client(i));
-			people[i] = new Client(i);
+			people[i] = Client.generateRandom(i);
 		}	
 
-		for(int i=0; i<GYM_REGISTERED_CLIENTS; i++)
-		{
-	   	  noOfWeightPlates.clear();
-  		  noOfWeightPlates.put(WeightPlateSize.SMALL_3KG, rnd.nextInt((10-0) + 1));
-    	  noOfWeightPlates.put(WeightPlateSize.MEDIUM_5KG, rnd.nextInt((10-0) + 1));
-    	  noOfWeightPlates.put(WeightPlateSize.LARGE_10KG, rnd.nextInt((10-0) + 1));
-			//according to pdf number of plates for each exercise should between 0 and 10
-			for(int j=0; j<rnd.nextInt((20-15) + 1) + 15; j++) 
-				people[i].addExercise(Exercise.generateRandom(noOfWeightPlates));
-			//routines should have 15-20 exercises
-		}
 		for (Client client : people){
 			executor.execute(new Runnable()
 			{
@@ -96,6 +85,7 @@ public class Gym implements Runnable
 						for (Exercise exercise : client.getRoutine()){
 							Map<WeightPlateSize, Integer> weightMap = exercise.getWeightPlateSizeMap();
 							try{
+								System.out.println("begin");
 								appMutex.acquire();
 								app_perms.get(exercise.getApparatus()).acquire(); // acquire the semaphore for a specific apparatus in the exercise
 								appMutex.release();

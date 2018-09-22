@@ -6,6 +6,7 @@ package Assignment2;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Random;
 
 public class Exercise
@@ -22,9 +23,14 @@ public class Exercise
 		this.duration = duration;
 	}
 
-	public static Exercise generateRandom(Map<WeightPlateSize, Integer> weight)
+	public static Exercise generateRandom()
 	{
-		Exercise ex = new Exercise(ApparatusType.rndApparatus(), weight, rnd.nextInt((10-1) + 1) + 1); //the duration is in milliseconds
+		int dur = rnd.nextInt((10-1) + 1) + 1;
+		Map<WeightPlateSize, Integer> m = new LinkedHashMap<>();
+		m.put(WeightPlateSize.SMALL_3KG, rnd.nextInt((10-0) + 1));
+		m.put(WeightPlateSize.MEDIUM_5KG, rnd.nextInt((10-0) + 1));
+		m.put(WeightPlateSize.LARGE_10KG, rnd.nextInt((10-0) + 1));
+		Exercise ex = new Exercise(ApparatusType.rndApparatus(), m, dur); //the duration is in milliseconds
 		return ex;
 	}
 
