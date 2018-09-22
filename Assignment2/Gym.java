@@ -24,7 +24,7 @@ public class Gym implements Runnable
 	private Map<WeightPlateSize, Integer> noOfWeightPlates = new LinkedHashMap<>();
 	private Set<Client> clients = new HashSet<Client>(); //generating fresh client ids
 	private Client[] people = new Client[GYM_REGISTERED_CLIENTS];
-	private ExecutorService executor = Executors.newFixedThreadPool(3);//basically the semaphore for entering the gym, only of size 30
+	private ExecutorService executor = Executors.newFixedThreadPool(2);//basically the semaphore for entering the gym, only of size 30
 	private Semaphore[] weights = new Semaphore[] {new Semaphore(75), new Semaphore(90), new Semaphore(110)}; //75 10kg, 90 5kg, 110 3kg available
 	private Semaphore[] apparatuses = new Semaphore[] {new Semaphore(5),new Semaphore(5),new Semaphore(5),new Semaphore(5),new Semaphore(5),new Semaphore(5),new Semaphore(5),new Semaphore(5)};
 	//semaphores for legpress, barbell, hacksquat, legextension, legcurl, latpulldown, pecdeck, & cablecrossover
@@ -65,6 +65,7 @@ public class Gym implements Runnable
 
 	public void run()
 	{		
+
 		final Semaphore appMutex = new Semaphore(1);
 		final Semaphore smallWeightMutex = new Semaphore(1);
 		final Semaphore medWeightMutex = new Semaphore(1); 
@@ -77,16 +78,25 @@ public class Gym implements Runnable
 			people[i] = Client.generateRandom(i);
 		}	
 
+		
 		for (Client client : people){
-			executor.execute(new Runnable()
+			executor.submit(new Runnable()
 			{
 					public void run()
 					{
+						/*int index = 0;
+						System.out.print(client.getId() + " has routine: ");
+						for(int i=0; i<client.getRoutine().size(); i++)
+						{
+						client.getRoutineAt(i).printExercise();
+						System.out.print(" ");
+						}*/
 						for (Exercise exercise : client.getRoutine()){
 							Map<WeightPlateSize, Integer> weightMap = exercise.getWeightPlateSizeMap();
 							try{
 								appMutex.acquire();
 								app_perms.get(exercise.getApparatus()).acquire(); // acquire the semaphore for a specific apparatus in the exercise
+								//client.getRoutineAt(index).printExercise();
 								System.out.println(client.getId() + " just started using the " + exercise.getApparatus());
 								appMutex.release();
 
@@ -171,7 +181,7 @@ public class Gym implements Runnable
 								numberOfWeights.put(WeightPlateSize.LARGE_10KG,  numberOfWeights.get(WeightPlateSize.LARGE_10KG) + numLargeWeights);
 								System.out.println(client.getId() + " just put away their Large weights");
 								largeWeightMutex.release(); 
-
+								//index++;
 							}
 							catch(InterruptedException error){
 								error.printStackTrace();
@@ -179,9 +189,15 @@ public class Gym implements Runnable
 						}
 					}
 			});
+			executor.shutdown();
+			/*if(!executor.awaitTermination(120, TimeUnit.SECONDS)){
+				System.out.println("Waiting...");
+				System.exit(0);
+			}
+			System.out.println("Exiting normally"); */ //errors with this and exceptions without it
 		}
 
-		executor.shutdown();
+		
 	}
 
 }

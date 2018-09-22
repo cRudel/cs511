@@ -52,6 +52,11 @@ public class Client
 
 	}
 
+	Exercise getRoutineAt(int i)
+	{
+		return this.routine.get(i);
+	}
+
 	List<Exercise> getRoutine()
 	{
 		return this.routine;
