@@ -16,7 +16,7 @@ public class Client
 	public Client(int id)
 	{
 		this.id = id;
-		this.routine = new ArrayList<>();
+		this.routine = new ArrayList<Exercise>();
 	}
 
 	public void addExercise(Exercise e)
