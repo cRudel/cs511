@@ -28,6 +28,14 @@ public class Exercise
 		return ex;
 	}
 
+	public ApparatusType getApparatus(){
+		return this.at;
+	}
+	
+	public Map<WeightPlateSize,Integer> getWeightPlateSizeMap() {
+		return weight;
+	}
+
 	void printExercise()
 	{
 		System.out.print("(" + this.at + ", ");
