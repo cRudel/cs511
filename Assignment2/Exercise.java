@@ -42,6 +42,10 @@ public class Exercise
 		return weight;
 	}
 
+	public int getDuration(){
+		return this.duration;
+	}
+
 	void printExercise()
 	{
 		System.out.print("(" + this.at + ", ");

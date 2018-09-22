@@ -29,6 +29,10 @@ public class Client
 	 	routine.add(e); 
 	}
 
+	public int getId(){
+		return this.id;
+	}
+
 	public static Client generateRandom(int id)
 	{
 		Client c = new Client(id);
