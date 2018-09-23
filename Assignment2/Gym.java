@@ -65,6 +65,7 @@ public class Gym implements Runnable
 
 	public void run()
 	{		
+
 		final Semaphore appMutex = new Semaphore(1);
 		final Semaphore smallWeightMutex = new Semaphore(1);
 		final Semaphore medWeightMutex = new Semaphore(1); 
@@ -77,6 +78,7 @@ public class Gym implements Runnable
 			people[i] = Client.generateRandom(i);
 		}
 
+		
 		for (Client client : people){
 			executor.submit(new Runnable()
 			{
@@ -89,6 +91,7 @@ public class Gym implements Runnable
 								//appMutex.acquire();
 								System.out.println(client.getId() + " Wants to use the " + exercise.getApparatus());
 								app_perms.get(exercise.getApparatus()).acquire(); // acquire the semaphore for a specific apparatus in the exercise
+								//client.getRoutineAt(index).printExercise();
 								System.out.println(client.getId() + " just started using the " + exercise.getApparatus());
 								//appMutex.release();
 								
