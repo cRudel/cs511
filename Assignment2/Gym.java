@@ -24,7 +24,7 @@ public class Gym implements Runnable
 	private Map<WeightPlateSize, Integer> noOfWeightPlates = new LinkedHashMap<>();
 	private Set<Client> clients = new HashSet<Client>(); //generating fresh client ids
 	private Client[] people = new Client[GYM_REGISTERED_CLIENTS];
-	private ExecutorService executor = Executors.newFixedThreadPool(3);//basically the semaphore for entering the gym, only of size 30
+	private ExecutorService executor = Executors.newFixedThreadPool(GYM_SIZE);//basically the semaphore for entering the gym, only of size 30
 	private Semaphore[] weights = new Semaphore[] {new Semaphore(75), new Semaphore(90), new Semaphore(110)}; //75 10kg, 90 5kg, 110 3kg available
 	private Semaphore[] apparatuses = new Semaphore[] {new Semaphore(5),new Semaphore(5),new Semaphore(5),new Semaphore(5),new Semaphore(5),new Semaphore(5),new Semaphore(5),new Semaphore(5)};
 	//semaphores for legpress, barbell, hacksquat, legextension, legcurl, latpulldown, pecdeck, & cablecrossover
@@ -75,24 +75,34 @@ public class Gym implements Runnable
 		{
 			clients.add(new Client(i));
 			people[i] = Client.generateRandom(i);
-		}	
+		}
 
 		for (Client client : people){
-			executor.execute(new Runnable()
+			executor.submit(new Runnable()
 			{
 					public void run()
 					{
+						System.out.println("num threads :" + java.lang.Thread.activeCount());
 						for (Exercise exercise : client.getRoutine()){
 							Map<WeightPlateSize, Integer> weightMap = exercise.getWeightPlateSizeMap();
 							try{
-								appMutex.acquire();
+								//appMutex.acquire();
+								System.out.println(client.getId() + " Wants to use the " + exercise.getApparatus());
 								app_perms.get(exercise.getApparatus()).acquire(); // acquire the semaphore for a specific apparatus in the exercise
 								System.out.println(client.getId() + " just started using the " + exercise.getApparatus());
-								appMutex.release();
+								//appMutex.release();
+								
+								smallWeightMutex.acquire();
+								medWeightMutex.acquire();
+								largeWeightMutex.acquire();
 
 								numSmallWeights = weightMap.get(WeightPlateSize.SMALL_3KG);
 								numMedWeights = weightMap.get(WeightPlateSize.MEDIUM_5KG);
 								numLargeWeights = weightMap.get(WeightPlateSize.LARGE_10KG);
+
+								smallWeightMutex.release();
+								medWeightMutex.release();
+								largeWeightMutex.release();			
 
 								while(true){
 									smallWeightMutex.acquire();
@@ -110,7 +120,6 @@ public class Gym implements Runnable
 									//if there isn't enough weights for us to use we continue checking.
 									//we need to do this so we don't hold up weights forever and it avoids deadlock.
 									else{ 
-										System.out.println(client.getId() + " is waiting for their weights");
 										smallWeightMutex.release();
 										medWeightMutex.release();
 										largeWeightMutex.release();
@@ -120,21 +129,24 @@ public class Gym implements Runnable
 									weight_perms.get(WeightPlateSize.SMALL_3KG).acquire();
 								}				
 								numberOfWeights.put(WeightPlateSize.SMALL_3KG,  numberOfWeights.get(WeightPlateSize.SMALL_3KG) - numSmallWeights);
-								System.out.println(client.getId() + " just got their small weights");
+								System.out.println(client.getId() + " just got " + numSmallWeights + " small weights");
+								System.out.println("Total Small weights: " + numberOfWeights.get(WeightPlateSize.SMALL_3KG));
 								smallWeightMutex.release(); //other people can now access small weights
 
 								for (int i = 0; i < numMedWeights; i++){
 									weight_perms.get(WeightPlateSize.MEDIUM_5KG).acquire();
 								}				
 								numberOfWeights.put(WeightPlateSize.MEDIUM_5KG,  numberOfWeights.get(WeightPlateSize.MEDIUM_5KG) - numMedWeights);
-								System.out.println(client.getId() + " just got their medium weights");
+								System.out.println(client.getId() + " just got " + numMedWeights + "Medium weights");
+								System.out.println("Total Medium weights: " + numberOfWeights.get(WeightPlateSize.MEDIUM_5KG));
 								medWeightMutex.release(); //other people can now access med weights
 
 								for (int i = 0; i < numLargeWeights; i++){
 									weight_perms.get(WeightPlateSize.LARGE_10KG).acquire();
 								}				
 								numberOfWeights.put(WeightPlateSize.LARGE_10KG,  numberOfWeights.get(WeightPlateSize.LARGE_10KG) - numLargeWeights);
-								System.out.println(client.getId() + " just got their Large weights");
+								System.out.println(client.getId() + " just got " + numLargeWeights + " Large weights");
+								System.out.println("Total large weights: " + numberOfWeights.get(WeightPlateSize.LARGE_10KG));
 								largeWeightMutex.release(); //other people can now access largeweights
 
 								//use machine now for exercise .get duration
@@ -155,22 +167,32 @@ public class Gym implements Runnable
 									weight_perms.get(WeightPlateSize.SMALL_3KG).release();
 								}				
 								numberOfWeights.put(WeightPlateSize.SMALL_3KG,  numberOfWeights.get(WeightPlateSize.SMALL_3KG) + numSmallWeights);
-								System.out.println(client.getId() + " just put away their small weights");
+								System.out.println(client.getId() + " just put away " + numSmallWeights + " their small weights");
+								System.out.println("Total Small weights: " + numberOfWeights.get(WeightPlateSize.SMALL_3KG));
 								smallWeightMutex.release(); 
 
 								for (int i = 0; i < numMedWeights; i++){
 									weight_perms.get(WeightPlateSize.MEDIUM_5KG).release();
 								}				
 								numberOfWeights.put(WeightPlateSize.MEDIUM_5KG,  numberOfWeights.get(WeightPlateSize.MEDIUM_5KG) + numMedWeights);
-								System.out.println(client.getId() + " just put away their medium weights");
+								System.out.println(client.getId() + " just put away " + numMedWeights + " medium weights");
+								System.out.println("Total Medium weights: " + numberOfWeights.get(WeightPlateSize.MEDIUM_5KG));
 								medWeightMutex.release(); 
 
 								for (int i = 0; i < numLargeWeights; i++){
 									weight_perms.get(WeightPlateSize.LARGE_10KG).release();
 								}				
 								numberOfWeights.put(WeightPlateSize.LARGE_10KG,  numberOfWeights.get(WeightPlateSize.LARGE_10KG) + numLargeWeights);
-								System.out.println(client.getId() + " just put away their Large weights");
+								System.out.println(client.getId() + " just put away:  " + numLargeWeights + " Large weights");
+								System.out.println("Total Large weights" + numberOfWeights.get(WeightPlateSize.LARGE_10KG));
 								largeWeightMutex.release(); 
+
+
+								//appMutex.acquire();
+								System.out.println("ABOUT TO PUT AWAY SOMETHING");
+								app_perms.get(exercise.getApparatus()).release(); // release the semaphore for a specific apparatus in the exercise
+								System.out.println(client.getId() + " just put away the " + exercise.getApparatus());
+								//appMutex.release();
 
 							}
 							catch(InterruptedException error){
@@ -180,7 +202,6 @@ public class Gym implements Runnable
 					}
 			});
 		}
-
 		executor.shutdown();
 	}
 
